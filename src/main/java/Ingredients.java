@@ -2,12 +2,13 @@ import org.sql2o.*;
 import java.util.List;
 
 public class Ingredients extends RecipeItems {
-  private float qty;
+  private double qty;
   public static final String DATABASE_TYPE = "Ingredient";
 
-  public Ingredients (String name, float qty) {
+  public Ingredients (String name, double qty, int recipeId) {
     this.name = name;
     this.qty = qty;
+    this.recipeId = recipeId;
     type = DATABASE_TYPE;
   }
 
@@ -17,11 +18,12 @@ public class Ingredients extends RecipeItems {
 
   public void save() {
     try(Connection con = DB.sql2o.open()) {
-      String sql = "INSERT INTO ingredients_instructions (name, qty, type) VALUES (:name, :qty, :type)";
+      String sql = "INSERT INTO ingredients_instructions (name, qty, type, recipe_id) VALUES (:name, :qty, :type, :recipe_id)";
       this.id = (int) con.createQuery(sql, true)
         .addParameter("name", this.name)
         .addParameter("qty", this.qty)
         .addParameter("type", this.type)
+        .addParameter("recipe_id", this.recipeId)
         .executeUpdate()
         .getKey();
     }
@@ -38,12 +40,12 @@ public class Ingredients extends RecipeItems {
     }
   }
 
-  public static List <Ingredients> all() {
+  public static List<Ingredients> all() {
     String sql = "SELECT * FROM ingredients_instructions WHERE type = :type";
     try(Connection con = DB.sql2o.open()) {
       return con.createQuery(sql)
         .throwOnMappingFailure(false)
-        .addParameter("type", this.type)
+        .addParameter("type", DATABASE_TYPE)
         .executeAndFetch(Ingredients.class);
     }
   }

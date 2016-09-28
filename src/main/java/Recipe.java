@@ -1,5 +1,6 @@
 import org.sql2o.*;
 import java.util.List;
+import java.util.ArrayList;
 
 public abstract class Recipe {
   public int id;
@@ -14,6 +15,10 @@ public abstract class Recipe {
 
   public void setName(String name) {
     this.name = name;
+  }
+
+  public int getId() {
+    return this.id;
   }
 
   public int getRating() {
@@ -56,14 +61,14 @@ public abstract class Recipe {
   public List<Tag> getAllTags() {
     try(Connection con = DB.sql2o.open()){
       String sql = "SELECT tag.* FROM tag LEFT JOIN tag_recipe ON tag_recipe.tag_id = tag.id WHERE tag_recipe.recipe_id = :id;";
-      con.createQuery(sql)
+      return con.createQuery(sql)
         .addParameter("id", this.getId())
-        .executeUpdate();
+        .executeAndFetch(Tag.class);
     }
   }
 
   public List<Object> getAllInstructionsAndIngredients() {
-    List<Object> foundObjects = new List<Object>();
+    List<Object> foundObjects = new ArrayList<Object>();
     try(Connection con = DB.sql2o.open()){
       String sqlInstructions = "SELECT ingredients_instructions.* FROM ingredients_instructions LEFT JOIN recipe ON recipe.id = ingredients_instructions.recipe_id WHERE recipe.Id = :id AND ingredients_instructions.type = ':type';";
       List<Instructions> foundInstructions = con.createQuery(sqlInstructions)
@@ -79,8 +84,18 @@ public abstract class Recipe {
         .executeAndFetch(Ingredients.class);
       foundObjects.addAll(foundIngredients);
     }
-    foundObjects.sort();
+    // foundObjects.sort();
     return foundObjects;
   }
 
+  @Override
+   public boolean equals(Object otherRecipe) {
+     if (!(otherRecipe instanceof Recipe)) {
+       return false;
+     } else {
+       Recipe newRecipe = (Recipe) otherRecipe;
+       return this.getName().equals(newRecipe.getName()) &&
+              this.getRating() == newRecipe.getRating();
+   }
+ }
 }

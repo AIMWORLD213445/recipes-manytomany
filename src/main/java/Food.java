@@ -32,12 +32,12 @@ public class Food extends Recipe {
     }
   }
 
-  public static List <Food> all() {
+  public static List<Food> all() {
     String sql = "SELECT * FROM recipe WHERE type = :type ORDER BY rating";
     try(Connection con = DB.sql2o.open()) {
       return con.createQuery(sql)
         .throwOnMappingFailure(false)
-        .addParameter("type", this.type)
+        .addParameter("type", DATABASE_TYPE)
         .executeAndFetch(Food.class);
     }
   }
@@ -54,23 +54,28 @@ public class Food extends Recipe {
   }
 
   public static List<Food> searchByIngredient(String search) {
-    String sql = "SELECT recipe.* FROM recipe LEFT JOIN ingredients_instructions ON recipe.Id = ingredients_instructions.recipe_Id WHERE recipe.type = :type AND ingredients_instructions.name ~* :search";
+    String sql = "SELECT recipe.* FROM recipe " +
+    "LEFT JOIN ingredients_instructions ON recipe.Id = ingredients_instructions.recipe_Id " +
+    "WHERE recipe.type = :type AND ingredients_instructions.name ~* :search";
     try(Connection con = DB.sql2o.open()) {
       return con.createQuery(sql)
         .throwOnMappingFailure(false)
-        .addParameter("search", ".*" + search ".*")
-        .addParameter("type", this.type)
+        .addParameter("search", ".*" + search + ".*")
+        .addParameter("type", DATABASE_TYPE)
         .executeAndFetch(Food.class);
     }
   }
 
   public static List<Food> searchByTag(String search) {
-    String sql = "SELECT recipe.* FROM recipe LEFT JOIN tag_recipe ON recipe.Id = tag_recipe.recipe_Id WHERE recipe.type = :type AND tag_recipe.name ~* :search";
+    String sql = "SELECT recipe.* FROM recipe " +
+      "LEFT JOIN tag_recipe ON recipe.Id = tag_recipe.recipe_Id " +
+      "LEFT JOIN tag ON tag_recipe.tag_id = tag.id " +
+      "WHERE recipe.type = :type AND tag.name ~* :search";
     try(Connection con = DB.sql2o.open()) {
       return con.createQuery(sql)
         .throwOnMappingFailure(false)
-        .addParameter("search", ".*" + search ".*")
-        .addParameter("type", this.type)
+        .addParameter("search", ".*" + search + ".*")
+        .addParameter("type", DATABASE_TYPE)
         .executeAndFetch(Food.class);
     }
   }

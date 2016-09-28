@@ -1,7 +1,7 @@
 import org.sql2o.*;
 import java.util.List;
 
-public class Ingredients extends RecipeItems {
+public class Instructions extends RecipeItems {
   public static final String DATABASE_TYPE = "Instructions";
 
   public Instructions (String name) {
@@ -35,7 +35,7 @@ public class Ingredients extends RecipeItems {
     try(Connection con = DB.sql2o.open()) {
       return con.createQuery(sql)
         .throwOnMappingFailure(false)
-        .addParameter("type", this.type)
+        .addParameter("type", DATABASE_TYPE)
         .executeAndFetch(Instructions.class);
     }
   }

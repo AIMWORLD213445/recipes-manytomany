@@ -5,8 +5,9 @@ public class Drink extends Recipe {
   private String glassType;
   public static final String DATABASE_TYPE = "Drink";
 
-  public Drink (String name) {
+  public Drink (String name, String glassType) {
     this.name = name;
+    this.glassType = glassType;
     type = DATABASE_TYPE;
   }
 
@@ -23,6 +24,8 @@ public class Drink extends Recipe {
       String sql = "INSERT INTO recipe (name, rating, glassType, type) VALUES (:name, :rating, :glassType, :type)";
       this.id = (int) con.createQuery(sql, true)
         .addParameter("name", this.name)
+        .addParameter("rating", this.rating)
+        .addParameter("glassType", this.glassType)
         .addParameter("type", this.type)
         .executeUpdate()
         .getKey();
@@ -35,17 +38,17 @@ public class Drink extends Recipe {
       con.createQuery(sql)
         .addParameter("name", this.name)
         .addParameter("rating", this.rating)
-        .addParameter("glassType", this.glassType);
+        .addParameter("glassType", this.glassType)
         .addParameter("id", this.id)
         .executeUpdate();
     }
   }
 
-  public static List <Drink> all() {
+  public static List<Drink> all() {
     String sql = "SELECT * FROM recipe WHERE type = :type ORDER BY rating";
     try(Connection con = DB.sql2o.open()) {
       return con.createQuery(sql)
-        .addParameter("type", this.type)
+        .addParameter("type", DATABASE_TYPE)
         .executeAndFetch(Drink.class);
     }
   }
@@ -65,8 +68,8 @@ public class Drink extends Recipe {
     try(Connection con = DB.sql2o.open()) {
       return con.createQuery(sql)
         .throwOnMappingFailure(false)
-        .addParameter("search", ".*" + search ".*")
-        .addParameter("type", this.type)
+        .addParameter("search", ".*" + search + ".*")
+        .addParameter("type", DATABASE_TYPE)
         .executeAndFetch(Drink.class);
     }
   }
@@ -76,8 +79,8 @@ public class Drink extends Recipe {
     try(Connection con = DB.sql2o.open()) {
       return con.createQuery(sql)
         .throwOnMappingFailure(false)
-        .addParameter("search", ".*" + search ".*")
-        .addParameter("type", this.type)
+        .addParameter("search", ".*" + search + ".*")
+        .addParameter("type", DATABASE_TYPE)
         .executeAndFetch(Drink.class);
     }
   }

@@ -13,6 +13,10 @@ public class Tag {
     return name;
   }
 
+  public int getId() {
+    return this.id;
+  }
+
   public void save() {
     try(Connection con = DB.sql2o.open()) {
       String sql = "INSERT INTO tag (name) VALUES (:name)";
@@ -33,7 +37,7 @@ public class Tag {
     }
   }
 
-  public static List <Tag> all() {
+  public static List<Tag> all() {
     String sql = "SELECT * FROM tag";
     try(Connection con = DB.sql2o.open()) {
       return con.createQuery(sql)
@@ -61,5 +65,15 @@ public class Tag {
         .executeUpdate();
     }
   }
+
+    @Override
+     public boolean equals(Object otherTag) {
+       if (!(otherTag instanceof Tag)) {
+         return false;
+       } else {
+        Tag newTag = (Tag) otherTag;
+         return this.getName().equals(newTag.getName());
+     }
+   }
 
 }

@@ -1,7 +1,7 @@
 import org.sql2o.*;
 import java.util.List;
 
-public abstract class RecipeItems implements Comparable<Name> {
+public abstract class RecipeItems implements Comparable<RecipeItems> {
   public int id;
   public String name;
   public String type;
@@ -10,6 +10,10 @@ public abstract class RecipeItems implements Comparable<Name> {
 
   public String getName() {
     return name;
+  }
+
+  public int getId() {
+    return this.id;
   }
 
   public void setName(String name) {
@@ -25,8 +29,17 @@ public abstract class RecipeItems implements Comparable<Name> {
     }
   }
 
-  public int compareTo(RecipeItem otherItem) {
-    return this.getId().compareTo(otherItem.getId());
+  public int compareTo(RecipeItems otherItem) {
+    return this.getId() - otherItem.getId();
 }
 
+  @Override
+   public boolean equals(Object otherRecipeItems) {
+     if (!(otherRecipeItems instanceof RecipeItems)) {
+       return false;
+     } else {
+       RecipeItems newRecipeItems = (RecipeItems) otherRecipeItems;
+       return this.getName().equals(newRecipeItems.getName());
+   }
+  }
 }
