@@ -6,6 +6,7 @@ public abstract class RecipeItems implements Comparable<RecipeItems> {
   public String name;
   public String type;
   public int recipeId;
+  public final static int MAX_NAME_LENGTH = 200;
 
 
   public String getName() {
@@ -17,6 +18,9 @@ public abstract class RecipeItems implements Comparable<RecipeItems> {
   }
 
   public void setName(String name) {
+    if (name.length() > MAX_NAME_LENGTH){
+          throw new IllegalArgumentException("Ingredients/Instructions must be 200 characters or less.");
+      }
     this.name = name;
   }
 
@@ -29,6 +33,7 @@ public abstract class RecipeItems implements Comparable<RecipeItems> {
     }
   }
 
+  @Override
   public int compareTo(RecipeItems otherItem) {
     return this.getId() - otherItem.getId();
 }

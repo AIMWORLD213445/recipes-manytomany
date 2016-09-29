@@ -1,11 +1,15 @@
 import org.sql2o.*;
 import java.util.List;
+import java.sql.Timestamp;
 
 public class Drink extends Recipe {
   private String glassType;
   public static final String DATABASE_TYPE = "Drink";
 
   public Drink (String name, String glassType) {
+    if (name.length() > MAX_NAME_LENGTH){
+          throw new IllegalArgumentException("Recipe names must be 20 characters or less.");
+      }
     this.name = name;
     this.glassType = glassType;
     type = DATABASE_TYPE;
@@ -21,7 +25,7 @@ public class Drink extends Recipe {
 
   public void save() {
     try(Connection con = DB.sql2o.open()) {
-      String sql = "INSERT INTO recipe (name, rating, glassType, type) VALUES (:name, :rating, :glassType, :type)";
+      String sql = "INSERT INTO recipe (name, rating, glassType, type, created) VALUES (:name, :rating, :glassType, :type, now())";
       this.id = (int) con.createQuery(sql, true)
         .addParameter("name", this.name)
         .addParameter("rating", this.rating)

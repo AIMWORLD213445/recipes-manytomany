@@ -4,13 +4,25 @@ import java.util.List;
 public class Tag {
   int id;
   String name;
+  private final static int MAX_TAG_LENGTH = 20;
+
 
   public Tag(String name) {
+    if (name.length() > MAX_TAG_LENGTH){
+          throw new IllegalArgumentException("Tags must be 20 characters or less.");
+      }
     this.name = name;
   }
 
   public String getName() {
     return name;
+  }
+
+  public void setName(String name) {
+    if (name.length() > MAX_TAG_LENGTH){
+          throw new IllegalArgumentException("Tags must be 20 characters or less.");
+      }
+    this.name = name;
   }
 
   public int getId() {

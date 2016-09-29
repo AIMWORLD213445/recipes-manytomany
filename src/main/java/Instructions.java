@@ -5,6 +5,9 @@ public class Instructions extends RecipeItems {
   public static final String DATABASE_TYPE = "Instructions";
 
   public Instructions (String name) {
+    if (name.length() > MAX_NAME_LENGTH){
+          throw new IllegalArgumentException("Ingredients/Instructions must be 200 characters or less.");
+      }
     this.name = name;
     type = DATABASE_TYPE;
   }

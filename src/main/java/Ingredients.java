@@ -6,6 +6,9 @@ public class Ingredients extends RecipeItems {
   public static final String DATABASE_TYPE = "Ingredient";
 
   public Ingredients (String name, double qty, int recipeId) {
+    if (name.length() > MAX_NAME_LENGTH){
+          throw new IllegalArgumentException("Ingredients/Instructions must be 200 characters or less.");
+      }
     this.name = name;
     this.qty = qty;
     this.recipeId = recipeId;

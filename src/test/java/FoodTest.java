@@ -3,6 +3,10 @@ import static org.junit.Assert.*;
 import org.sql2o.*;
 import java.util.List;
 import java.util.Arrays;
+import java.sql.Timestamp;
+import java.util.Date;
+import java.text.DateFormat;
+
 
 public class FoodTest {
 
@@ -62,4 +66,14 @@ public class FoodTest {
     List<Food> foundFood = Food.searchByTag("Awesome");
     assertEquals(true, foundFood.contains(foodOne));
   }
+
+  @Test
+  public void timestamp_matchesSavedTimeStamp_true () {
+    Food foodOne = new Food("pizza");
+    foodOne.save();
+    Timestamp savedFoodOne = Food.find(foodOne.getId()).getCreated();
+    Timestamp now = new Timestamp (new Date().getTime());
+    assertEquals (DateFormat.getDateTimeInstance().format(now), DateFormat.getDateTimeInstance().format(savedFoodOne));
+  }
+
 }

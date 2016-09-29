@@ -31,4 +31,15 @@ public class TagTest {
     Tag savedTag = Tag.find(tagOne.getId());
     assertEquals(true, tagOne.equals(savedTag));
   }
+
+  @Test (expected = IllegalArgumentException.class)
+  public void tag_tagNameThrowsExceptionOverMaxChars(){
+    Tag tagOne = new Tag("This is a really great recipe for christmas dinner");
+  }
+
+  @Test (expected = IllegalArgumentException.class)
+  public void tag_setNameThrowsExceptionOverMaxChars(){
+    Tag tagOne = new Tag("awesome");
+    tagOne.setName("This is a really great recipe for christmas dinner");
+  }
 }

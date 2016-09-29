@@ -2,16 +2,12 @@
 -- PostgreSQL database dump
 --
 
--- Dumped from database version 9.5.1
--- Dumped by pg_dump version 9.5.1
-
 SET statement_timeout = 0;
 SET lock_timeout = 0;
 SET client_encoding = 'UTF8';
 SET standard_conforming_strings = on;
 SET check_function_bodies = false;
 SET client_min_messages = warning;
-SET row_security = off;
 
 --
 -- Name: plpgsql; Type: EXTENSION; Schema: -; Owner: 
@@ -34,7 +30,7 @@ SET default_tablespace = '';
 SET default_with_oids = false;
 
 --
--- Name: ingredients_instructions; Type: TABLE; Schema: public; Owner: Guest
+-- Name: ingredients_instructions; Type: TABLE; Schema: public; Owner: Guest; Tablespace: 
 --
 
 CREATE TABLE ingredients_instructions (
@@ -70,12 +66,16 @@ ALTER SEQUENCE ingredients_instructions_id_seq OWNED BY ingredients_instructions
 
 
 --
--- Name: recipe; Type: TABLE; Schema: public; Owner: Guest
+-- Name: recipe; Type: TABLE; Schema: public; Owner: Guest; Tablespace: 
 --
 
 CREATE TABLE recipe (
     id integer NOT NULL,
-    name character varying
+    name character varying,
+    rating integer,
+    type character varying,
+    glasstype character varying,
+    created timestamp without time zone
 );
 
 
@@ -103,7 +103,7 @@ ALTER SEQUENCE recipe_id_seq OWNED BY recipe.id;
 
 
 --
--- Name: tag; Type: TABLE; Schema: public; Owner: Guest
+-- Name: tag; Type: TABLE; Schema: public; Owner: Guest; Tablespace: 
 --
 
 CREATE TABLE tag (
@@ -136,7 +136,7 @@ ALTER SEQUENCE tag_id_seq OWNED BY tag.id;
 
 
 --
--- Name: tag_recipe; Type: TABLE; Schema: public; Owner: Guest
+-- Name: tag_recipe; Type: TABLE; Schema: public; Owner: Guest; Tablespace: 
 --
 
 CREATE TABLE tag_recipe (
@@ -216,7 +216,7 @@ SELECT pg_catalog.setval('ingredients_instructions_id_seq', 1, false);
 -- Data for Name: recipe; Type: TABLE DATA; Schema: public; Owner: Guest
 --
 
-COPY recipe (id, name) FROM stdin;
+COPY recipe (id, name, rating, type, glasstype, created) FROM stdin;
 \.
 
 
@@ -258,7 +258,7 @@ SELECT pg_catalog.setval('tag_recipe_id_seq', 1, false);
 
 
 --
--- Name: ingredients_instructions_pkey; Type: CONSTRAINT; Schema: public; Owner: Guest
+-- Name: ingredients_instructions_pkey; Type: CONSTRAINT; Schema: public; Owner: Guest; Tablespace: 
 --
 
 ALTER TABLE ONLY ingredients_instructions
@@ -266,7 +266,7 @@ ALTER TABLE ONLY ingredients_instructions
 
 
 --
--- Name: recipe_pkey; Type: CONSTRAINT; Schema: public; Owner: Guest
+-- Name: recipe_pkey; Type: CONSTRAINT; Schema: public; Owner: Guest; Tablespace: 
 --
 
 ALTER TABLE ONLY recipe
@@ -274,7 +274,7 @@ ALTER TABLE ONLY recipe
 
 
 --
--- Name: tag_pkey; Type: CONSTRAINT; Schema: public; Owner: Guest
+-- Name: tag_pkey; Type: CONSTRAINT; Schema: public; Owner: Guest; Tablespace: 
 --
 
 ALTER TABLE ONLY tag
@@ -282,7 +282,7 @@ ALTER TABLE ONLY tag
 
 
 --
--- Name: tag_recipe_pkey; Type: CONSTRAINT; Schema: public; Owner: Guest
+-- Name: tag_recipe_pkey; Type: CONSTRAINT; Schema: public; Owner: Guest; Tablespace: 
 --
 
 ALTER TABLE ONLY tag_recipe

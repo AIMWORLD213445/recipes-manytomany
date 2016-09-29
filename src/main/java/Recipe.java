@@ -1,12 +1,17 @@
 import org.sql2o.*;
 import java.util.List;
 import java.util.ArrayList;
+import java.sql.Timestamp;
+import java.util.Date;
+import java.util.Collections;
 
 public abstract class Recipe {
   public int id;
   public String type;
   public String name;
   public int rating;
+  public Timestamp created;
+  public final static int MAX_NAME_LENGTH = 20;
 
 
   public String getName() {
@@ -14,11 +19,18 @@ public abstract class Recipe {
   }
 
   public void setName(String name) {
+    if (name.length() > MAX_NAME_LENGTH){
+          throw new IllegalArgumentException("Recipe names must be 20 characters or less.");
+      }
     this.name = name;
   }
 
   public int getId() {
     return this.id;
+  }
+
+  public Timestamp getCreated() {
+    return created;
   }
 
   public int getRating() {
@@ -67,8 +79,8 @@ public abstract class Recipe {
     }
   }
 
-  public List<Object> getAllInstructionsAndIngredients() {
-    List<Object> foundObjects = new ArrayList<Object>();
+  public List<RecipeItems> getAllInstructionsAndIngredients() {
+    List<RecipeItems> foundObjects = new ArrayList<RecipeItems>();
     try(Connection con = DB.sql2o.open()){
       String sqlInstructions = "SELECT ingredients_instructions.* FROM ingredients_instructions LEFT JOIN recipe ON recipe.id = ingredients_instructions.recipe_id WHERE recipe.Id = :id AND ingredients_instructions.type = ':type';";
       List<Instructions> foundInstructions = con.createQuery(sqlInstructions)
@@ -84,7 +96,7 @@ public abstract class Recipe {
         .executeAndFetch(Ingredients.class);
       foundObjects.addAll(foundIngredients);
     }
-    // foundObjects.sort();
+    Collections.sort(foundObjects);
     return foundObjects;
   }
 
